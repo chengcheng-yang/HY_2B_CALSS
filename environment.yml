@@ -1,0 +1,26 @@
+name: HY_2B  
+channels:
+    - conda-forge
+    - defaults
+dependencies:           # include all the packages you need in the project
+    - python>=3.9
+    - pytest
+    - sphinx
+    - pip
+    - matplotlib
+    - xarray
+    - h5py
+    - proplot
+    - netcdf4
+    - cartopy
+    - cmocean
+    - numpy
+    - scipy
+    - pandas
+    - jupyter
+    - basemap
+
+    - pip:              # include the packages that can only be installed by pip
+        - myst_parser
+        - nbsphinx
+        - mdutils
