@@ -85,10 +85,10 @@ contourf = ax.contourf(
 )
 # plot the wind direction
 quiver = ax.quiver(
-    lon_new[::20],
-    lat[::20],
-    np.cos(wind_dir[::20, ::20] / 180 * np.pi),
-    np.sin(wind_dir[::20, ::20] / 180 * np.pi),
+    lon_new[::10],
+    lat[::10],
+    np.sin(wind_dir[::10, ::10] / 180 * np.pi),
+    np.cos(wind_dir[::10, ::10] / 180 * np.pi),
     scale=80,
     width=0.001,
     headlength=8,
