@@ -1,6 +1,6 @@
 %% read name of the nc file
-
-fname = dir('../data/*.nc');
+clear;clc;
+fname = dir('../data/dt*.nc');
 fpath = strcat('../data/',fname.name);
 ncdisp(fpath);
 clear fname;
