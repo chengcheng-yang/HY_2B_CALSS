@@ -80,7 +80,7 @@ cbar = plt.colorbar(
     pad=0.01,
     shrink=0.6,
     label="Wind Speed (m/s)",
-    ticks=np.linspace(3, 15, 6),
+    ticks=np.linspace(3, 15, 4),
 )
 # set the labels
 cbar.ax.tick_params(labelsize=15)
