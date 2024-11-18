@@ -1,9 +1,12 @@
-% Set up directories and constants
-data_dir = '../data/'; 
-files = dir(fullfile(data_dir, '*.h5'));
-step = 2;  
+%% read and plot HY-2B data
+clear;clc;
 
-% Initialize variables
+%% load HY-2B data
+data_dir = '../data/';  % base folder save HY_2B data
+files = dir(fullfile(data_dir, '*.h5')); % filenames of the HY-2b data
+step = 2;  %original data is too large, here we set "2" to load data every 2 points 
+
+% Initialize variables to save the scatter data
 lon_all = [];
 lat_all = [];
 speed_all = [];
@@ -11,7 +14,7 @@ direction_all = [];
 
 % Loop through each file to read data and process
 for i = 1:length(files)
-    file = fullfile(data_dir, files(i).name);
+    file = fullfile(data_dir, files(i).name); % path of the HY-2B data
     
     % Read data from HDF5 file
     lon = double(h5read(file, '/wvc_lon'));
@@ -45,26 +48,28 @@ for i = 1:length(files)
     direction_all = [direction_all; direction_1d];
 end
 
-%% Set up plot
-figure('unit','centimeters','position',[1,1,18,10],'color','w');
+%% Figure to show the HY-2B data
+figure('unit','centimeters','position',[1,1,18,10],'color','w'); % figure size
 left = 1.5/18; 
 bottom = 1/10;
 width = 15/18;
 height = 8/10;
-axes('position',[left bottom width height]);
+axes('position',[left bottom width height]); % axe location
+% using m_map to plot the fgure
 m_proj('Equidistant cylindrical','long',[0 360],'lat',[-90 90]);
 m_scatter(lon_all,lat_all,2,speed_all, 'filled');hold on; 
-colormap('jet');
-caxis([3 15]);
-m_coast('patch',[.86 .86 .86]); hold on;
+colormap('jet'); % set 'jet' type of the colormap
+caxis([3 15]); % min and max limitaton of the figure
+m_coast('patch',[.86 .86 .86]); hold on; % land patch
+% vector of the wind direction
+x_comp = sin(direction_all);
+y_comp = cos(direction_all);
+m_quiver(lon_all(1:40:end), lat_all(1:40:end), x_comp(1:40:end), y_comp(1:40:end), 3, ...
+        'k', 'MaxHeadSize', 5, 'AutoScale', 'off');
+% tick and ticklabels of the x and y coordinate
 m_grid('linestyle','none','tickdir','out','xtick',0:60:360,'ytick',-90:30:90,'fontsize',12,...
     'fontname','Times New Roman','linewidth',1.5);
 hc = colorbar;
 set(hc,'tickdir','out','position',[0.93 0.15 0.012 0.7],...
    'ytick',3:3:15,'fontsize',12,'fontname','Times New Roman');
-
-x_comp = sin(direction_all);
-y_comp = cos(direction_all);
-m_quiver(lon_all(1:40:end), lat_all(1:40:end), x_comp(1:40:end), y_comp(1:40:end), 3, ...
-        'k', 'MaxHeadSize', 5, 'AutoScale', 'off');
 % export_fig(sprintf('%s%d.png','../figures/HY_2B_matlab'),'-r300','-zbuffer');

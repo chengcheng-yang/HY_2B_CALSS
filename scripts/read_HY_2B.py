@@ -33,7 +33,8 @@ lat_all = []
 speed_all = []
 direction_all = []
 
-step = 2  # subtract the data every 3 steps
+# the original data is too large, here we subtract the data every 2 steps
+step = 2
 
 for file in file_names:
     ds = h5py.File(f"../data/{file}", "r")
@@ -64,9 +65,10 @@ for file in file_names:
     direction_all = np.concatenate((direction_all, direction_1d))
 
 # %% plot the data
-fig = plt.figure(figsize=(18, 10), dpi=300)
-ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=180))
-ax.coastlines()
+fig = plt.figure(figsize=(18, 10), dpi=300)  # set the figure size
+ax = plt.axes(projection=ccrs.PlateCarree(central_longitude=180))  # set the projection
+ax.coastlines()  # add the coastlines
+# plot the scatter plot
 scatter = ax.scatter(
     lon_all,
     lat_all,
@@ -91,6 +93,7 @@ ax.quiver(
     headwidth=8,
     transform=ccrs.PlateCarree(),
 )
+# add the colorbar
 cbar = plt.colorbar(
     scatter,
     ax=ax,
@@ -101,12 +104,13 @@ cbar = plt.colorbar(
     label="Wind Speed (m/s)",
     ticks=np.arange(3, 16, 3),
 )
+# set the labels
 cbar.ax.tick_params(labelsize=15)
 ax.set_xticks(np.arange(0, 360, 30), crs=ccrs.PlateCarree())
 ax.set_yticks(np.arange(-90, 91, 30), crs=ccrs.PlateCarree())
 lon_labels = [str(int(lon)) for lon in np.arange(0, 360, 30)]
 ax.set_xticklabels(lon_labels, fontsize=15)
 ax.tick_params(axis="both", labelsize=15)
-
+# save the figure
 plt.savefig("../figures/HY_2B_python.png", dpi=300, bbox_inches="tight")
 plt.show()
