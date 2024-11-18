@@ -7,17 +7,41 @@ import datetime
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import glob
+from netCDF4 import Dataset
 
 """
 Python codes for data analysis of the windsat data. 
 """
-
-# %%  read windsat data
-# base folder of the observation data
+# %% path of the data
 base_folder = "../data/"
 # file name of wind speed and wind direction
 fname_speed = glob.glob(os.path.join(base_folder, "*speed*.nc"))
 fname_direction = glob.glob(os.path.join(base_folder, "*direction*.nc"))
+
+# %% base info of the data
+file_path = fname_speed[1]
+# open NetCDF
+with Dataset(file_path, "r") as nc:
+    # dimensions
+    print("dimensions:")
+    for dim in nc.dimensions:
+        print(f"    {dim} = {len(nc.dimensions[dim])} ;")
+
+    # variables
+    print("\nvariables:")
+    for var in nc.variables:
+        var_obj = nc.variables[var]
+        print(f"    {var_obj.dtype} {var}({', '.join(var_obj.dimensions)}) ;")
+
+        # attributes
+        for attr in var_obj.ncattrs():
+            print(f'            {var}:{attr} = "{getattr(var_obj, attr)}" ;')
+
+    # global attributes
+    print("\nGlobal Attributes:")
+    for attr in nc.ncattrs():
+        print(f'    {attr} = "{getattr(nc, attr)}" ;')
+# %%  read windsat data
 # load lon and lat
 lon = xr.open_dataset(fname_speed[0])["LONN719_720"].values
 lat = xr.open_dataset(fname_speed[0])["LAT"].values
